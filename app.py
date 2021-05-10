@@ -6,6 +6,7 @@ from matplotlib.backends import backend_tkagg
 import tkinter as tk
 
 
+
 class App(FourierAnimation):
     """
     App class
