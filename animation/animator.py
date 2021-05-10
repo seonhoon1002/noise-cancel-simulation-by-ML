@@ -101,7 +101,9 @@ class Animator:
         """This method plays the animation. This must be called in order
         for an animation to be shown.
         """
+        #plot이 진행되는 걸 의미하는듯
         self._add_plots()
+
         self.main_animation = animation.FuncAnimation(
                 self.figure,
                 self._make_frame,

@@ -71,26 +71,26 @@ class App(FourierAnimation):
         self.function_dropdown.grid(
                 row=2, column=3, padx=(10, 10), pady=(0, 0))
 
-        self.enter_function_label = tk.Label(
-                self.window,
-                text="Enter waveform f(t)",
-                )
-        self.enter_function_label.grid(row=3, column=3,
-                                       sticky=tk.S + tk.E + tk.W,
-                                       padx=(10, 10),
-                                       pady=(0, 0))
-        self.enter_function = tk.Entry(self.window)
-        self.enter_function.grid(row=4, column=3,
-                                 sticky=tk.N + tk.E + tk.W + tk.S,
-                                 padx=(10, 10))
-        self.enter_function.bind("<Return>", self.set_function_entry)
-        self.update_button = tk.Button(self.window, text='OK',
-                                       command=self.set_function_entry)
-        self.update_button.grid(row=5, column=3,
-                                sticky=tk.N + tk.E + tk.W,
-                                padx=(10, 10),
-                                pady=(0, 0)
-                                )
+        # self.enter_function_label = tk.Label(
+        #         self.window,
+        #         text="Enter waveform f(t)",
+        #         )
+        # self.enter_function_label.grid(row=3, column=3,
+        #                                sticky=tk.S + tk.E + tk.W,
+        #                                padx=(10, 10),
+        #                                pady=(0, 0))
+        # self.enter_function = tk.Entry(self.window)
+        # self.enter_function.grid(row=4, column=3,
+        #                          sticky=tk.N + tk.E + tk.W + tk.S,
+        #                          padx=(10, 10))
+        # self.enter_function.bind("<Return>", self.set_function_entry)
+        # self.update_button = tk.Button(self.window, text='OK',
+        #                                command=self.set_function_entry)
+        # self.update_button.grid(row=5, column=3,
+        #                         sticky=tk.N + tk.E + tk.W,
+        #                         padx=(10, 10),
+        #                         pady=(0, 0)
+        #                         )
         self.sliderslist = []
         self.circles_slider = None
         self.slider_speed = None

@@ -13,19 +13,21 @@ class FourierAnimation(Animator):
         """
         The constructor
         """
-        figsize = (10, 3)
+        figsize = (8, 4)
         Animator.__init__(self, dpi, figsize, 15)
         self.counts = -2
         self.increment = 4
         ax = self.figure.add_subplot(
             1, 1, 1, aspect="equal")
-        maxval = 1.0
+        maxval = 2.0
         view = 2*maxval
-        ax.set_xlim(-2.0*maxval - 0.1*view, 2)
+        ax.set_xlim(-2.0*maxval - 0.1*view, 7)
         ax.set_ylim(-maxval-0.1*view, maxval+0.1*view)
-        ax.set_xticks([2.0, 3.0, 4.0, 5.0, 6.0])
+
+        #이 부위를 뭔가 손대야할 것 같음
+        ax.set_xticks([2.0, 3.0, 4.0, 5.0, 6.0, 7.0])
         ax.set_yticks([])
-        ax.set_xticklabels([r"$s - \pi$", r"$s - \pi/2$", r"s",
+        ax.set_xticklabels(["noise",r"$s - \pi$", r"$s - \pi/2$", r"s",
                             r"$s + \pi/2$", r"$s + \pi$"])
         ax.grid(linestyle="--")
         self.circles = Circles(ax)
@@ -46,9 +48,10 @@ class FourierAnimation(Animator):
         self.v_line = v_line
 
         self.t = np.linspace(-np.pi, np.pi - 2*np.pi/256.0, 256)
-        self.x = function(self.t)
+
+        self.x = function(self.t) + np.random.randn(256)/20
         self.x = np.roll(self.x, self.counts)
-        function_plot, = ax.plot(np.linspace(2.0, 6.0, 256),
+        function_plot, = ax.plot(np.linspace(2.0, 7.0, 256),
                                  self.x, linewidth=1.0,
                                  # color="black"
                                  color="gray"
@@ -56,7 +59,7 @@ class FourierAnimation(Animator):
         amps = self.circles.get_amplitudes()
         self.x2 = np.fft.irfft(amps)
         self.x2 = np.roll(self.x2, self.counts)
-        circle_function_plot, = ax.plot(np.linspace(2.0, 6.0, 256),
+        circle_function_plot, = ax.plot(np.linspace(2.0, 7.0, 256),
                                         self.x, linewidth=1.0,
                                         color="red")
         self.function_plot = function_plot
@@ -103,6 +106,7 @@ class FourierAnimation(Animator):
         """
         Set function.
         """
+        
         self.function = FunctionRtoR(function_name, abc.t)
         self.function_display.set_text(r"$f(t) = %s$"
                                        r" ,   $ t = s (mod(2 \pi)) - \pi $" %
@@ -128,7 +132,7 @@ class FourierAnimation(Animator):
         self._rescale.set_scale_values(self.x, self.y_limits)
         if not self._rescale.in_bounds():
             self.x = self._rescale(self.x)
-        self.x = np.roll(self.x, self.counts)
+        self.x = np.roll(self.x, self.counts)+ np.random.randn(256)/20
         self._set_x2()
 
     def _set_x2(self) -> None:
