@@ -1,5 +1,5 @@
 # noise-cancel-simulation-by-ML
-Visualize the Fourier series for any real periodic function and cancelling the noise
+Visualize the Fourier series for any real periodic function and cancelling the noise  
 I modified the https://github.com/marl0ny/Real-Fourier-Series code
 
 
