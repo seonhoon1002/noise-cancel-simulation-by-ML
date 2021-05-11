@@ -72,6 +72,8 @@ class App(FourierAnimation):
         self.function_dropdown.grid(
                 row=2, column=3, padx=(10, 10), pady=(0, 0))
 
+        
+
         # self.enter_function_label = tk.Label(
         #         self.window,
         #         text="Enter waveform f(t)",
@@ -100,6 +102,13 @@ class App(FourierAnimation):
         self._number_of_circles = 80
         self._set_widgets_after_param_sliders()
 
+        self.noise_cancel_button = tk.Button(
+                self.window, 
+                text='noise canceling',
+                command=self.noise_cancelling
+                )
+        self.noise_cancel_button.grid(row=5, column=3, padx=(10, 20),pady=(0, 0))
+
     def _set_widgets_after_param_sliders(self, k: int = 5) -> None:
         """
         Set widgets after parameter sliders
@@ -113,7 +122,7 @@ class App(FourierAnimation):
                                  sticky=tk.N + tk.E + tk.W,
                                  padx=(10, 10))
         self.circles_slider.set(self._number_of_circles)
-        self.slider_speed = tk.Scale(self.window, from_=-9, to=8,
+        self.slider_speed = tk.Scale(self.window, from_=0, to=8,
                                      label="Animation Speed: ",
                                      orient=tk.HORIZONTAL,
                                      length=200,
@@ -128,6 +137,8 @@ class App(FourierAnimation):
                         self.window.quit(), self.window.destroy()]
                     )
         self.quit_button.grid(row=k+3, column=3, pady=(0, 0))
+        
+        
 
     def set_animation_speed(self, *arg: tk.Event):
         """
@@ -172,6 +183,7 @@ class App(FourierAnimation):
                                            )
         self.set_widgets()
 
+
     def set_number_of_circles(self, *event: tk.Event) -> None:
         """
         Set the number of circles.
@@ -179,6 +191,12 @@ class App(FourierAnimation):
         resolution = self.circles_slider.get()
         self._number_of_circles = resolution
         FourierAnimation.set_number_of_circles(self, resolution+1)
+
+    def noise_cancelling(self):
+        if self.noise_cancel_toggle:
+            self.noise_cancel_toggle=False
+        else:
+            self.noise_cancel_toggle=True
 
     def slider_update(self, *event: tk.Event) -> None:
         """

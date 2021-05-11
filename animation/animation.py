@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from .animator import Animator
 from .circles import Circles, VerticalRescaler
 from sympy import abc
+from .noise_cancel import Noise_cancel
 from .functions import FunctionRtoR
 # from time import perf_counter
 
@@ -21,14 +22,14 @@ class FourierAnimation(Animator):
             1, 1, 1, aspect="equal")
         maxval = 2.0
         view = 2*maxval
-        ax.set_xlim(-2.0*maxval - 0.1*view, 7)
+        ax.set_xlim(-1.0*maxval - 0.1*view, 8)
         ax.set_ylim(-maxval-0.1*view, maxval+0.1*view)
 
         #이 부위를 뭔가 손대야할 것 같음
-        ax.set_xticks([2.0, 3.0, 4.0, 5.0, 6.0, 7.0])
+        ax.set_xticks([2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0])
         ax.set_yticks([])
-        ax.set_xticklabels(["noise",r"$s - \pi$", r"$s - \pi/2$", r"s",
-                            r"$s + \pi/2$", r"$s + \pi$"])
+        ax.set_xticklabels(["noise","noise\ncancelling",r"$s - 1/3\pi$", r"$s$", r"$s+1/3\pi$",
+                            r"$s + 2/3\pi$", r"$s + \pi$"])
         ax.grid(linestyle="--")
         self.circles = Circles(ax)
         function = FunctionRtoR(function_name, abc.t)
@@ -51,7 +52,7 @@ class FourierAnimation(Animator):
 
         self.x = function(self.t) + np.random.randn(256)/20
         self.x = np.roll(self.x, self.counts)
-        function_plot, = ax.plot(np.linspace(2.0, 7.0, 256),
+        function_plot, = ax.plot(np.linspace(2.0, 8.0, 256),
                                  self.x, linewidth=1.0,
                                  # color="black"
                                  color="gray"
@@ -59,7 +60,7 @@ class FourierAnimation(Animator):
         amps = self.circles.get_amplitudes()
         self.x2 = np.fft.irfft(amps)
         self.x2 = np.roll(self.x2, self.counts)
-        circle_function_plot, = ax.plot(np.linspace(2.0, 7.0, 256),
+        circle_function_plot, = ax.plot(np.linspace(2.0, 8.0, 256),
                                         self.x, linewidth=1.0,
                                         color="red")
         self.function_plot = function_plot
@@ -68,7 +69,12 @@ class FourierAnimation(Animator):
         # and pass it to Circles. Try to only use one instance of this class.
         self._rescale = VerticalRescaler()
         self.y_limits = [-1.0, 1.0]
-
+        self.noise_cancel= Noise_cancel()
+        self.noise_cancel_toggle=False
+        self.x_queue=np.zeros(256)
+    def noise_cancelling(self):
+        print("ok")
+     
     def update(self, delta_t: float) -> None:
         """
         Overridden update method from the Animator class
@@ -85,9 +91,21 @@ class FourierAnimation(Animator):
         self.v_line.set_xdata([x1, 2.0])
         self.v_line.set_ydata([y, y])
         self.x = np.roll(self.x, self.increment)
+        
+        noise_margin=41
+        self.x_queue[self.increment:]=self.x_queue[:256-self.increment]
+        self.x_queue[:self.increment]=self.x[:self.increment]+np.random.randn(1)/20
+        
+        #button 누를시 동작가능하게 만들어야함.
+        if self.noise_cancel_toggle:
+            self.x_show = self.noise_cancel.cancelling(self.x_queue,self.increment,noise_margin+2)
+        else:
+            self.x_show=self.x_queue.copy()
+            
         self.x2 = np.roll(self.x2, self.increment)
-        self.function_plot.set_ydata(self.x)
+        self.function_plot.set_ydata(self.x_show)
         self.circle_function_plot.set_ydata(self.x2)
+        
 
     def set_speed(self, speed: int) -> None:
         """
@@ -132,7 +150,7 @@ class FourierAnimation(Animator):
         self._rescale.set_scale_values(self.x, self.y_limits)
         if not self._rescale.in_bounds():
             self.x = self._rescale(self.x)
-        self.x = np.roll(self.x, self.counts)+ np.random.randn(256)/20
+        self.x = np.roll(self.x, self.counts)
         self._set_x2()
 
     def _set_x2(self) -> None:
