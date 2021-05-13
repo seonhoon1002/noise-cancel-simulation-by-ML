@@ -14,6 +14,7 @@ from sympy import abc
 # from noise_cancel import Noise_cancel
 from functions import FunctionRtoR
 from noise_net import WaveRNN
+
 class Noise_cancel:
     def __init__(self):
         print("ok noise cancel")
@@ -36,7 +37,8 @@ class Noise_cancel:
             predict=self.model(h0,input_signal)            
             predict=predict.numpy()
             predict=predict.reshape(-1)
-            array=np.concatenate([array[:noise_margin],predict[:5],array[2*noise_margin-(noise_margin-5):]])
+            # array=np.concatenate([array[:noise_margin],predict[:15+increment],array[2*noise_margin-(noise_margin-(15+increment)):]])
+            array=np.concatenate([array[:noise_margin],predict,array[2*noise_margin:]])
             return array    
 class FourierAnimation(Animator):
 
