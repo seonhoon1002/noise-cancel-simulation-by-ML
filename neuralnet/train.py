@@ -26,7 +26,7 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
 total_loss=0
 error=0
-for epoch in range(10):
+for epoch in range(5):
     for i_batch, sample_batched in enumerate(train_loader):
         # print(sample_batched['noise'].size())
         noisy_sig= torch.unsqueeze(sample_batched['noise'].float(),2).to(device)
@@ -55,4 +55,4 @@ for epoch in range(10):
     
     print("error:",error.item()/len(train_loader))
     
-torch.save(model.state_dict(), "weight.pth")
+    torch.save(model.state_dict(), "weight.pth")

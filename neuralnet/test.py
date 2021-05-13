@@ -25,8 +25,13 @@ for i_batch, sample_batched in enumerate(test_loader):
     with torch.no_grad():
         noisy_sig= torch.unsqueeze(sample_batched['noise'].float(),2).to(device)
         pure_sig= torch.unsqueeze(sample_batched['pure'].float(),2).to(device)
-        h0=torch.zeros(1,pure_sig.size(0),n_hidden,requires_grad=True).to(device)
+        h0=torch.zeros(1,pure_sig.size(0),n_hidden,requires_grad=False).to(device)
+
+        # print(noisy_sig.size())
+        
         outputs= model(h0, noisy_sig)
+        print(outputs.size())
+        
         error+= torch.mean(torch.abs(outputs-pure_sig))
 
     print("error:",error.item()/len(test_loader))

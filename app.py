@@ -20,19 +20,24 @@ class Noise_cancel:
         # if torch.cuda.is_available():
         #     device = torch.device('cuda')
         # else:
-        device = torch.device('cpu')
+        self.device = torch.device('cpu')
         
-        self.model= WaveRNN().to(device)
+        self.model= WaveRNN().to(self.device)
         self.model.load_state_dict(torch.load("neuralnet/weight.pth"))
         self.model.eval()        
 
 
     def cancelling(self,array,increment,noise_margin):
-        print(noise_margin)
-        if array[noise_margin]>0:
-            array[noise_margin:noise_margin+increment]=0
-
-        return array
+        n_hidden=5
+        with torch.no_grad():
+            input_signal= torch.Tensor(array[noise_margin:2*noise_margin]).to(self.device)
+            input_signal= input_signal.view(1,noise_margin,1)
+            h0=torch.zeros(1,1,n_hidden).to(self.device)
+            predict=self.model(h0,input_signal)            
+            predict=predict.numpy()
+            predict=predict.reshape(-1)
+            array=np.concatenate([array[:noise_margin],predict[:5],array[2*noise_margin-(noise_margin-5):]])
+            return array    
 class FourierAnimation(Animator):
 
     def __init__(self, function_name: str, dpi: int = 120) -> None:
@@ -123,7 +128,8 @@ class FourierAnimation(Animator):
         
         #button 누를시 동작가능하게 만들어야함.
         if self.noise_cancel_toggle:
-            self.x_show = self.noise_cancel.cancelling(self.x_queue,self.increment,noise_margin+2)
+            self.x_queue = self.noise_cancel.cancelling(self.x_queue,self.increment,noise_margin)
+            self.x_show = self.x_queue.copy()
         else:
             self.x_show=self.x_queue.copy()
             

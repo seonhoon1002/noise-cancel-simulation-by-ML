@@ -61,10 +61,10 @@ class GEN_DATA:
                 plt.plot(modified_t,y_noist_t, color='blue')
                 plt.show()
         
-        with open('wave_data.pickle','wb') as f:
+        with open('wave_data_val.pickle','wb') as f:
             pickle.dump(self.data,f, pickle.HIGHEST_PROTOCOL)
 
 
 if __name__=="__main__":
     gen= GEN_DATA(visualize=False)
-    gen.gen_data(50000)
+    gen.gen_data(10000)
