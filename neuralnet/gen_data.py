@@ -41,7 +41,7 @@ class GEN_DATA:
         t= np.linspace(2,3,self.wave_size)
         
         for idx in range(data_num):
-            amp, phase, T=3*np.random.rand(1), 5*np.pi*np.random.rand(1), np.random.randint(-3,3,1)
+            amp, phase, T=3*np.random.rand(1), 5*np.pi*np.random.rand(1), 3+np.random.rand(1)
             modified_t = 2*np.pi*(t+phase)/(T+0.0001)
             # print(amp, phase, period)
 
