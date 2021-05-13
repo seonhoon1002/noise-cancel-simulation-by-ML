@@ -37,7 +37,7 @@ class GEN_DATA:
         self.wave_size= wave_size
         self.visualize=visualize
 
-    def gen_data(self, data_num):
+    def gen_data(self, data_num,file_name):
         t= np.linspace(2,3,self.wave_size)
         
         for idx in range(data_num):
@@ -61,11 +61,12 @@ class GEN_DATA:
                 plt.plot(modified_t,y_noist_t, color='blue')
                 plt.show()
         
-        with open('wave_data_val.pickle','wb') as f:
-            pickle.dump(self.data,f, pickle.HIGHEST_PROTOCOL)
+        with open(,'wb') as f:
+            pickle.dump(file_name, self.data,f, pickle.HIGHEST_PROTOCOL)
 
 
 if __name__=="__main__":
     gen= GEN_DATA(visualize=False)
-    gen.gen_data(10000)
+    gen.gen_data(500000,'wave_data.pickle')
+    gen.gen_data(10000,'wave_data_val.pickle')
 
