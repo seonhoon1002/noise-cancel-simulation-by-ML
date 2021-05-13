@@ -29,7 +29,7 @@ class Noise_cancel:
 
 
     def cancelling(self,array,increment,noise_margin):
-        n_hidden=5
+        n_hidden=20
         with torch.no_grad():
             input_signal= torch.Tensor(array[noise_margin:2*noise_margin]).to(self.device)
             input_signal= input_signal.view(1,noise_margin,1)
