@@ -10,7 +10,7 @@ class WaveRNN(nn.Module):
 
     self.rnn = nn.RNN(input_size=1, hidden_size=n_hidden, dropout=0.3,batch_first=True)
     self.fc1 = nn.Linear(n_hidden, 5)
-    self.fc2 = nn.Linear(n_hidden, 5)
+    self.fc2 = nn.Linear(n_hidden, 1)
 
   def forward(self, hidden, X):
     # X = X.transpose(0, 1)

@@ -67,4 +67,4 @@ class GEN_DATA:
 
 if __name__=="__main__":
     gen= GEN_DATA(visualize=False)
-    gen.gen_data(50000)
+    gen.gen_data(5000)
