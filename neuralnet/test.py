@@ -46,11 +46,12 @@ for i_batch, sample_batched in enumerate(test_loader):
         outputs= model(noisy_sig)
         error+= torch.mean(torch.abs(outputs-pure_sig))
         ori_error+= torch.mean(torch.abs(noisy_sig-pure_sig))
-        
+
         if i_batch %1000==999:
             print("batch",i_batch)
             print("error:",error.item())
             print("ori_error:",ori_error.item())
+            
 print("error:",error.item()/len(test_loader))
 print("ori_error:",ori_error.item()/len(test_loader))
 
