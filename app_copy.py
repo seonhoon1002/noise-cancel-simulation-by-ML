@@ -23,34 +23,34 @@ class Noise_cancel:
         # else:
         self.device = torch.device('cpu')
         
-        # self.model= WaveRNN().to(self.device)
-        self.model= WaveFC().to(self.device)
-        self.model.load_state_dict(torch.load("neuralnet/weight_fc2.pth"))
+        self.model= WaveRNN().to(self.device)
+        # self.model= WaveFC().to(self.device)
+        self.model.load_state_dict(torch.load("neuralnet/weight.pth"))
         self.model.eval()        
 
 
     def cancelling(self,array,increment,noise_margin):
-        # n_hidden=20
-        # with torch.no_grad():
-        #     input_signal= torch.Tensor(array[noise_margin:2*noise_margin]).to(self.device)
-        #     input_signal= input_signal.view(1,noise_margin,1)
-        #     h0=torch.zeros(1,1,n_hidden).to(self.device)
-        #     predict=self.model(h0,input_signal)            
-        #     predict=predict.numpy()
-        #     predict=predict.reshape(-1)
-        #     # array=np.concatenate([array[:noise_margin],predict[:15+increment],array[2*noise_margin-(noise_margin-(15+increment)):]])
-        #     array=np.concatenate([array[:noise_margin],predict,array[2*noise_margin:]])
-        #     return array   
+        n_hidden=20
         with torch.no_grad():
-            input_signal= torch.Tensor(array[noise_margin:2*noise_margin]).unsqueeze(0).to(self.device)
-            # input_signal= input_signal.view(1,noise_margin,1)
-            # h0=torch.zeros(1,1,n_hidden).to(self.device)
-            predict=self.model(input_signal)            
+            input_signal= torch.Tensor(array[noise_margin:2*noise_margin]).to(self.device)
+            input_signal= input_signal.view(1,noise_margin,1)
+            h0=torch.zeros(1,1,n_hidden).to(self.device)
+            predict=self.model(h0,input_signal)            
             predict=predict.numpy()
             predict=predict.reshape(-1)
             # array=np.concatenate([array[:noise_margin],predict[:15+increment],array[2*noise_margin-(noise_margin-(15+increment)):]])
             array=np.concatenate([array[:noise_margin],predict,array[2*noise_margin:]])
-            return array    
+            return array   
+        # with torch.no_grad():
+        #     input_signal= torch.Tensor(array[noise_margin:2*noise_margin]).unsqueeze(0).to(self.device)
+        #     # input_signal= input_signal.view(1,noise_margin,1)
+        #     # h0=torch.zeros(1,1,n_hidden).to(self.device)
+        #     predict=self.model(input_signal)            
+        #     predict=predict.numpy()
+        #     predict=predict.reshape(-1)
+        #     # array=np.concatenate([array[:noise_margin],predict[:15+increment],array[2*noise_margin-(noise_margin-(15+increment)):]])
+        #     array=np.concatenate([array[:noise_margin],predict,array[2*noise_margin:]])
+        #     return array    
 
 class FourierAnimation(Animator):
 
@@ -140,10 +140,10 @@ class FourierAnimation(Animator):
         self.x_queue[self.increment:]=self.x_queue[:256-self.increment]
         self.x_queue[:self.increment]=self.x[:self.increment]+np.random.randn(1)/20
         
+        x_copy= self.x.copy()
         #button 누를시 동작가능하게 만들어야함.
         if self.noise_cancel_toggle:
-            self.x_queue[noise_margin:2*noise_margin]= self.x.copy()[noise_margin:2*noise_margin]
-            self.x_queue = self.noise_cancel.cancelling(self.x_queue,self.increment,noise_margin)
+            self.x_queue = self.noise_cancel.cancelling(x_copy,self.increment,noise_margin)
             self.x_show = self.x_queue.copy()
         else:
             self.x_show=self.x_queue.copy()
