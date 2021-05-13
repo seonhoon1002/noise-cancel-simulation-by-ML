@@ -68,3 +68,4 @@ class GEN_DATA:
 if __name__=="__main__":
     gen= GEN_DATA(visualize=False)
     gen.gen_data(10000)
+
