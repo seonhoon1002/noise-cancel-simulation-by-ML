@@ -5,8 +5,8 @@ from noise_net import WaveRNN
 from dataset import WaveDataset
 import torch
 
-batch_size= 1
-n_hidden=5
+batch_size= 128
+n_hidden=20
 
 if torch.cuda.is_available():
     device = torch.device('cuda')
@@ -20,6 +20,7 @@ model= WaveRNN().to(device)
 model.load_state_dict(torch.load("weight.pth"))
 model.eval()
 error=0
+ori_error=0
 
 for i_batch, sample_batched in enumerate(test_loader):
     with torch.no_grad():
@@ -30,9 +31,16 @@ for i_batch, sample_batched in enumerate(test_loader):
         # print(noisy_sig.size())
         
         outputs= model(h0, noisy_sig)
-        print(outputs.size())
-        
         error+= torch.mean(torch.abs(outputs-pure_sig))
+        ori_error+= torch.mean(torch.abs(noisy_sig-pure_sig))
+        
+        if i_batch %1000==999:
+            print("batch",i_batch)
+            print("error:",error.item())
+            print("ori_error:",ori_error.item())
 
-    print("error:",error.item()/len(test_loader))
+print("error:",error.item()/len(test_loader))
+print("ori_error:",ori_error.item()/len(test_loader))
+
+    
     

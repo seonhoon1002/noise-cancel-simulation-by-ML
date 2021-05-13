@@ -6,7 +6,7 @@ from dataset import WaveDataset
 import torch
 
 batch_size= 128
-n_hidden=5
+n_hidden=20
 
 if torch.cuda.is_available():
     device = torch.device('cuda')
@@ -36,7 +36,7 @@ for epoch in range(5):
         outputs= model(h0, noisy_sig)
         loss = criterion(outputs, pure_sig)
         total_loss+= loss.item()
-        if i_batch %100==99:
+        if i_batch %500==499:
             print("loss",loss.item(),"error",torch.mean(torch.abs(outputs-pure_sig)).item())
         optimizer.zero_grad()
         loss.backward()

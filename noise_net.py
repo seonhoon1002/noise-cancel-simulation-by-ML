@@ -2,14 +2,14 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
-n_hidden=5
+n_hidden=20
 
 class WaveRNN(nn.Module):
   def __init__(self):
     super(WaveRNN, self).__init__()
 
-    self.rnn = nn.RNN(input_size=1, hidden_size=n_hidden, dropout=0.3,batch_first=True)
-    self.fc1 = nn.Linear(n_hidden, 5)
+    self.rnn = nn.RNN(input_size=1, hidden_size=n_hidden, dropout=0.1,batch_first=True)
+    self.fc1 = nn.Linear(n_hidden, n_hidden)
     self.fc2 = nn.Linear(n_hidden, 1)
 
   def forward(self, hidden, X):

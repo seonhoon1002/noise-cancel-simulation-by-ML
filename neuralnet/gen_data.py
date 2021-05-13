@@ -61,8 +61,8 @@ class GEN_DATA:
                 plt.plot(modified_t,y_noist_t, color='blue')
                 plt.show()
         
-        with open(,'wb') as f:
-            pickle.dump(file_name, self.data,f, pickle.HIGHEST_PROTOCOL)
+        with open(file_name, 'wb') as f:
+            pickle.dump(self.data,f, pickle.HIGHEST_PROTOCOL)
 
 
 if __name__=="__main__":
