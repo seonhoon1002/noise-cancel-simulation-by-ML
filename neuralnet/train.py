@@ -60,7 +60,7 @@ error=0
 #     torch.save(model.state_dict(), "weight_2.pth")
 
 #FC 버젼
-for epoch in range(30):
+for epoch in range(5):
     for i_batch, sample_batched in enumerate(train_loader):
         # print(sample_batched['noise'].size())
         noisy_sig= sample_batched['noise'].float().to(device)
@@ -87,4 +87,4 @@ for epoch in range(30):
     
     print("error:",error.item()/len(train_loader))
     
-    torch.save(model.state_dict(), "weight_02.pth")
+    torch.save(model.state_dict(), "weight_fc2.pth")
